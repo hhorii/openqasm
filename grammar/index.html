@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grammar &#8212; OpenQASM Live Specification  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Pulse-level descriptions of gates and measurement" href="../language/pulses.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="grammar">
+<h1>Grammar<a class="headerlink" href="#grammar" title="Permalink to this headline">¶</a></h1>
+<p>Grammar specification based in <a class="reference external" href="https://www.antlr.org/">ANTLR</a> parser generator</p>
+<p>[WIP]</p>
+<div class="highlight-antlr notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">grammar</span><span class="w"> </span><span class="nc">qasm3</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">program</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">header</span><span class="w"> </span><span class="nv">include</span><span class="o">*</span><span class="w"> </span><span class="nv">statement</span><span class="o">+</span><span class="w"> </span><span class="no">EOF</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">header</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;OPENQASM&#39;</span><span class="w"> </span><span class="no">Number</span><span class="w"> </span><span class="o">(</span><span class="no">Dot</span><span class="w"> </span><span class="no">Number</span><span class="o">)?</span><span class="w"> </span><span class="no">SemiColon</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">include</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;include&#39;</span><span class="w"> </span><span class="no">StringLiteral</span><span class="w"> </span><span class="no">SemiColon</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">statement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">variableDeclarationStatement</span><span class="w"> </span><span class="no">SemiColon</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">gateDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">variableDeclarationStatement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="nv">variableDeclarationList</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">type</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">varType</span><span class="w"> </span><span class="o">(</span><span class="no">OpenBracket</span><span class="w"> </span><span class="no">Number</span><span class="w"> </span><span class="o">(</span><span class="no">Comma</span><span class="w"> </span><span class="no">Number</span><span class="o">)?</span><span class="w"> </span><span class="no">CloseBracket</span><span class="o">)?</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">variableDeclarationList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">variableDeclaration</span><span class="w"> </span><span class="o">(</span><span class="no">Comma</span><span class="w"> </span><span class="nv">variableDeclaration</span><span class="o">)*</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">variableDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="no">OpenBracket</span><span class="w"> </span><span class="no">Number</span><span class="w"> </span><span class="no">CloseBracket</span><span class="o">)?</span><span class="w"> </span><span class="o">(</span><span class="no">Assign</span><span class="w"> </span><span class="nv">value</span><span class="o">)?</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">gateDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Gate</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="nv">paramsList</span><span class="o">)?</span><span class="w"> </span><span class="nv">qargsList</span><span class="w"> </span><span class="s">&#39;{&#39;</span><span class="w"> </span><span class="nv">expression</span><span class="o">+</span><span class="w"> </span><span class="s">&#39;}&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">paramsList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">paramDeclaration</span><span class="w"> </span><span class="o">(</span><span class="no">Comma</span><span class="w"> </span><span class="nv">paramDeclaration</span><span class="o">)*</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">// Why does it only accept angle parameters?</span><span class="w"></span>
+<span class="c">// Why are variables declared like angle[32] foo and params angle[32]:foo?</span><span class="w"></span>
+<span class="nl">paramDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="no">OpenBracket</span><span class="w"> </span><span class="no">Number</span><span class="w"> </span><span class="no">CloseBracket</span><span class="w"> </span><span class="no">Colon</span><span class="w"> </span><span class="no">Identifier</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">qargsList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">qargDeclaration</span><span class="w"> </span><span class="o">(</span><span class="no">Comma</span><span class="w"> </span><span class="nv">qargDeclaration</span><span class="o">)*</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">qargDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="no">Comma</span><span class="w"> </span><span class="no">Identifier</span><span class="o">)*</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">expression</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="c">// TODO</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">value</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Number</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">StringLiteral</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">// Lexer variables needs some refactor</span><span class="w"></span>
+<span class="nl">varType</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;qubit&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;qreg&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;bit&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;creg&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;bool&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;const&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;int&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;uint&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;angle&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;fixed&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">Gate</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;gate&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">Assign</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;=&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">StringLiteral</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&quot;&#39;</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="s">&#39;&quot;&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">OpenBracket</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">CloseBracket</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;]&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">Colon</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;:&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">SemiColon</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;;&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">Dot</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;.&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">Comma</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;,&#39;</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">Identifier</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="s">&#39;a&#39;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s">&#39;z&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;A&#39;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s">&#39;Z&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="s">&#39;a&#39;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s">&#39;z&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;A&#39;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s">&#39;Z&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;0&#39;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s">&#39;9&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;_&#39;</span><span class="o">)*</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">Number</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="o">+</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">OpenQASM Live Specification</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../language/index.html">Language</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Grammar</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../language/pulses.html" title="previous chapter">Pulse-level descriptions of gates and measurement</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/grammar/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
