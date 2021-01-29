@@ -211,22 +211,20 @@ preceding, <code class="docutils literal notranslate"><span class="pre">{</span>
 <div class="section" id="kernel-function-calls">
 <h2>Kernel function calls<a class="headerlink" href="#kernel-function-calls" title="Permalink to this headline">¶</a></h2>
 <p>Kernel functions are declared by giving their signature using the
-statement <code class="docutils literal notranslate"><span class="pre">kernel</span> <span class="pre">name(inputs)-&gt;</span> <span class="pre">output;</span></code> where inputs is a comma-separated list of type names and
-output is a single type name. They can be functions of any number of
-arguments whose types correspond to the classical types of OpenQASM.
+statement <code class="docutils literal notranslate"><span class="pre">kernel</span> <span class="pre">name(inputs)</span> <span class="pre">-&gt;</span> <span class="pre">output;</span></code> where <code class="docutils literal notranslate"><span class="pre">inputs</span></code> is a comma-separated list of type names and
+<code class="docutils literal notranslate"><span class="pre">output</span></code> is a single type name. The parentheses may be omitted if there are no <code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
+<p>Kernel functions can take of any number of arguments whose types correspond to the classical types of OpenQASM.
 Inputs are passed by value. They can return zero or one value whose type
 is any classical type in OpenQASM except real constants. If necessary,
 multiple return values can be accommodated by concatenating registers.
 The type and size of each argument must be known at compile time to
 define data flow and enable scheduling. We do not address issues such as
 how the kernel functions are defined and registered.</p>
-<p>Kernel functions are invoked using the statement <code class="docutils literal notranslate"><span class="pre">name(inputs)</span> <span class="pre">-&gt;</span> <span class="pre">output;</span></code>. The functions are not
-required to be idempotent. They may change the state of the process
-providing the function. In our computational model, the kernel functions
-are assumed to run concurrently with other classical and quantum
-computations. The output of a kernel function can be assigned to a
-variable on declaration using the assignment operator rather than the
-<code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> arrow notation.</p>
+<p>Kernel functions are invoked using the statement <code class="docutils literal notranslate"><span class="pre">name(inputs);</span></code> and the result may be assigned to
+<code class="docutils literal notranslate"><span class="pre">output</span></code> as needed via an assignment operator (<code class="docutils literal notranslate"><span class="pre">=</span></code>, <code class="docutils literal notranslate"><span class="pre">+=</span></code>, etc). <code class="docutils literal notranslate"><span class="pre">inputs</span></code> are literals and
+<code class="docutils literal notranslate"><span class="pre">output</span></code> is a variable, corresponding to the types in the signature. The functions are not required to
+be idempotent. They may change the state of the process providing the function. In our computational
+model, the kernel functions are assumed to run concurrently with other classical and quantum computations.</p>
 <dl class="footnote brackets">
 <dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">popcount</span></code> computes the Hamming weight of the input register.</p>
@@ -282,7 +280,7 @@ compile into target code that imposes iteration limits</p>
 <li class="toctree-l2"><a class="reference internal" href="pulses.html">Pulse-level descriptions of gates and measurement</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../grammar/index.html">Grammar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../grammar/index.html">OpenQasm 3.0 Grammar</a></li>
 </ul>
 
 <div class="relations">
@@ -322,7 +320,7 @@ compile into target code that imposes iteration limits</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

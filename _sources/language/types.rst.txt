@@ -10,7 +10,7 @@ Generalities
 
 Variable identifiers must begin with a letter [A-Za-z], an underscore, a
 percent sign, or an element from the Unicode character categories
-Lu/Ll/Lt/Lm/Lo/NI :cite:`noauthorUnicodeNodate`.
+Lu/Ll/Lt/Lm/Lo/Nl :cite:`noauthorUnicodeNodate`.
 Continuation characters may contain numbers. Variable identifiers may
 not override a reserved identifier.
 
@@ -230,9 +230,10 @@ namespace are listed in table `1 <#tab:real-constants>`__.
       +-------------------------------+--------------+--------------+---------------------+
       | Tau                           | tau          | τ            | 6.283185...         |
       +-------------------------------+--------------+--------------+---------------------+
-      | Euler’s number                | euler_gamma  | :math:`e`    | 2.7182818284...     |
+      | Euler’s number                | euler        | ℇ            | 2.7182818284...     |
       +-------------------------------+--------------+--------------+---------------------+
 
+Note that `e` is a valid identifier. `e/E` are also used in scientifier notation where appropriate.
 Types related to timing
 -----------------------
 

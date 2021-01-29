@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Grammar &#8212; OpenQASM Live Specification  documentation</title>
+    <title>OpenQasm 3.0 Grammar &#8212; OpenQASM Live Specification  documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -32,205 +32,1038 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="grammar">
-<h1>Grammar<a class="headerlink" href="#grammar" title="Permalink to this headline">¶</a></h1>
-<p>Grammar specification based in <a class="reference external" href="https://www.antlr.org/">ANTLR</a> parser generator</p>
-<p>[WIP]</p>
-<div class="highlight-antlr notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97
-98</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">grammar</span><span class="w"> </span><span class="nc">qasm3</span><span class="p">;</span><span class="w"></span>
+  <div class="section" id="openqasm-3-0-grammar">
+<h1>OpenQasm 3.0 Grammar<a class="headerlink" href="#openqasm-3-0-grammar" title="Permalink to this headline">¶</a></h1>
+<p>OpenQasm 3.0 Grammar specification based in <a class="reference external" href="https://www.antlr.org/">ANTLR</a> parser generator.</p>
+<div class="highlight-antlr notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c">/**** ANTLRv4  grammar for OpenQASM3.0. ****/</span><span class="w"></span>
+
+<span class="k">grammar</span><span class="w"> </span><span class="nc">qasm3</span><span class="p">;</span><span class="w"></span>
+
+<span class="c">/** Parser grammar **/</span><span class="w"></span>
 
 <span class="nl">program</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">header</span><span class="w"> </span><span class="nv">include</span><span class="o">*</span><span class="w"> </span><span class="nv">statement</span><span class="o">+</span><span class="w"> </span><span class="no">EOF</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">header</span><span class="w"> </span><span class="o">(</span><span class="nv">globalStatement</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">statement</span><span class="o">)*</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
 <span class="nl">header</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;OPENQASM&#39;</span><span class="w"> </span><span class="no">Number</span><span class="w"> </span><span class="o">(</span><span class="no">Dot</span><span class="w"> </span><span class="no">Number</span><span class="o">)?</span><span class="w"> </span><span class="no">SemiColon</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">version</span><span class="o">?</span><span class="w"> </span><span class="nv">include</span><span class="o">*</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">version</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;OPENQASM&#39;</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">Integer</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">RealNumber</span><span class="w"> </span><span class="o">)</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
 <span class="nl">include</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;include&#39;</span><span class="w"> </span><span class="no">StringLiteral</span><span class="w"> </span><span class="no">SemiColon</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;include&#39;</span><span class="w"> </span><span class="no">StringLiteral</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">globalStatement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">subroutineDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">kernelDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumGateDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">calibration</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumDeclarationStatement</span><span class="w">  </span><span class="c">// qubits are declared globally</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">pragma</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
 <span class="nl">statement</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">variableDeclarationStatement</span><span class="w"> </span><span class="no">SemiColon</span><span class="w"></span>
-<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">gateDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">expressionStatement</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">assignmentStatement</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">classicalDeclarationStatement</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">branchingStatement</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">loopStatement</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">controlDirectiveStatement</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">aliasStatement</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumStatement</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">variableDeclarationStatement</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="nv">variableDeclarationList</span><span class="w"></span>
+<span class="nl">quantumDeclarationStatement</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nv">quantumDeclaration</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">classicalDeclarationStatement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">classicalDeclaration</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">constantDeclaration</span><span class="w"> </span><span class="o">)</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">type</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">varType</span><span class="w"> </span><span class="o">(</span><span class="no">OpenBracket</span><span class="w"> </span><span class="no">Number</span><span class="w"> </span><span class="o">(</span><span class="no">Comma</span><span class="w"> </span><span class="no">Number</span><span class="o">)?</span><span class="w"> </span><span class="no">CloseBracket</span><span class="o">)?</span><span class="w"></span>
+<span class="nl">classicalAssignment</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">indexIdentifier</span><span class="w"> </span><span class="nv">assignmentOperator</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">indexIdentifier</span><span class="w"> </span><span class="o">)</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">variableDeclarationList</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">variableDeclaration</span><span class="w"> </span><span class="o">(</span><span class="no">Comma</span><span class="w"> </span><span class="nv">variableDeclaration</span><span class="o">)*</span><span class="w"></span>
+<span class="nl">assignmentStatement</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">classicalAssignment</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumMeasurementAssignment</span><span class="w"> </span><span class="o">)</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">returnSignature</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">ARROW</span><span class="w"> </span><span class="nv">classicalType</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">variableDeclaration</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="no">OpenBracket</span><span class="w"> </span><span class="no">Number</span><span class="w"> </span><span class="no">CloseBracket</span><span class="o">)?</span><span class="w"> </span><span class="o">(</span><span class="no">Assign</span><span class="w"> </span><span class="nv">value</span><span class="o">)?</span><span class="w"></span>
+<span class="c">/* Types and Casting */</span><span class="w"></span>
+
+<span class="nl">designator</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RBRACKET</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">gateDefinition</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Gate</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="nv">paramsList</span><span class="o">)?</span><span class="w"> </span><span class="nv">qargsList</span><span class="w"> </span><span class="s">&#39;{&#39;</span><span class="w"> </span><span class="nv">expression</span><span class="o">+</span><span class="w"> </span><span class="s">&#39;}&#39;</span><span class="w"></span>
+<span class="nl">doubleDesignator</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">COMMA</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RBRACKET</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">paramsList</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">paramDeclaration</span><span class="w"> </span><span class="o">(</span><span class="no">Comma</span><span class="w"> </span><span class="nv">paramDeclaration</span><span class="o">)*</span><span class="w"></span>
+<span class="nl">identifierList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">COMMA</span><span class="w"> </span><span class="o">)*</span><span class="w"> </span><span class="no">Identifier</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="c">// Why does it only accept angle parameters?</span><span class="w"></span>
-<span class="c">// Why are variables declared like angle[32] foo and params angle[32]:foo?</span><span class="w"></span>
-<span class="nl">paramDeclaration</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="no">OpenBracket</span><span class="w"> </span><span class="no">Number</span><span class="w"> </span><span class="no">CloseBracket</span><span class="w"> </span><span class="no">Colon</span><span class="w"> </span><span class="no">Identifier</span><span class="w"></span>
+<span class="nl">association</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">COLON</span><span class="w"> </span><span class="no">Identifier</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">qargsList</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">qargDeclaration</span><span class="w"> </span><span class="o">(</span><span class="no">Comma</span><span class="w"> </span><span class="nv">qargDeclaration</span><span class="o">)*</span><span class="w"></span>
+<span class="c">// Quantum Types</span><span class="w"></span>
+<span class="nl">quantumType</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;qubit&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;qreg&#39;</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">qargDeclaration</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="no">Comma</span><span class="w"> </span><span class="no">Identifier</span><span class="o">)*</span><span class="w"></span>
+<span class="nl">quantumDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">quantumType</span><span class="w"> </span><span class="nv">indexIdentifierList</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumArgument</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">quantumType</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span><span class="w"> </span><span class="nv">association</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumArgumentList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">quantumArgument</span><span class="w"> </span><span class="no">COMMA</span><span class="w"> </span><span class="o">)*</span><span class="w"> </span><span class="nv">quantumArgument</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">// Classical Types</span><span class="w"></span>
+<span class="nl">bitType</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;bit&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;creg&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">singleDesignatorType</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;int&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;uint&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;float&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;angle&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">doubleDesignatorType</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;fixed&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">noDesignatorType</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;bool&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">timingType</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">classicalType</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">singleDesignatorType</span><span class="w"> </span><span class="nv">designator</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">doubleDesignatorType</span><span class="w"> </span><span class="nv">doubleDesignator</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">noDesignatorType</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">bitType</span><span class="w"> </span><span class="nv">designator</span><span class="o">?</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">constantDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;const&#39;</span><span class="w"> </span><span class="nv">equalsAssignmentList</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">// if multiple variables declared at once, either none are assigned or all are assigned</span><span class="w"></span>
+<span class="c">// prevents ambiguity w/ qubit arguments in subroutine calls</span><span class="w"></span>
+<span class="nl">singleDesignatorDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">singleDesignatorType</span><span class="w"> </span><span class="nv">designator</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">identifierList</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">equalsAssignmentList</span><span class="w"> </span><span class="o">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">doubleDesignatorDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">doubleDesignatorType</span><span class="w"> </span><span class="nv">doubleDesignator</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">identifierList</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">equalsAssignmentList</span><span class="w"> </span><span class="o">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">noDesignatorDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">noDesignatorType</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">identifierList</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">equalsAssignmentList</span><span class="w"> </span><span class="o">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">bitDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">bitType</span><span class="w"> </span><span class="o">(</span><span class="nv">indexIdentifierList</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">indexEqualsAssignmentList</span><span class="w"> </span><span class="o">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">classicalDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">singleDesignatorDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">doubleDesignatorDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">noDesignatorDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">bitDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">classicalTypeList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">classicalType</span><span class="w"> </span><span class="no">COMMA</span><span class="w"> </span><span class="o">)*</span><span class="w"> </span><span class="nv">classicalType</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">classicalArgument</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">classicalType</span><span class="w"> </span><span class="nv">association</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">classicalArgumentList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">classicalArgument</span><span class="w"> </span><span class="no">COMMA</span><span class="w"> </span><span class="o">)*</span><span class="w"> </span><span class="nv">classicalArgument</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">// Aliasing</span><span class="w"></span>
+<span class="nl">aliasStatement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;let&#39;</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">EQUALS</span><span class="w"> </span><span class="nv">indexIdentifier</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">// Register Concatenation and Slicing</span><span class="w"></span>
+
+<span class="nl">indexIdentifier</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="nv">rangeDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">expressionList</span><span class="w"> </span><span class="no">RBRACKET</span><span class="w"> </span><span class="o">)?</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">indexIdentifier</span><span class="w"> </span><span class="s1">&#39;||&#39;</span><span class="w"> </span><span class="nv">indexIdentifier</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">indexIdentifierList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">indexIdentifier</span><span class="w"> </span><span class="no">COMMA</span><span class="w"> </span><span class="o">)*</span><span class="w"> </span><span class="nv">indexIdentifier</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">indexEqualsAssignmentList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">indexIdentifier</span><span class="w"> </span><span class="nv">equalsExpression</span><span class="w"> </span><span class="no">COMMA</span><span class="o">)*</span><span class="w"> </span><span class="nv">indexIdentifier</span><span class="w"> </span><span class="nv">equalsExpression</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">rangeDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">expression</span><span class="o">?</span><span class="w"> </span><span class="no">COLON</span><span class="w"> </span><span class="nv">expression</span><span class="o">?</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">COLON</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="o">)?</span><span class="w"> </span><span class="no">RBRACKET</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">/* Gates and Built-in Quantum Instructions */</span><span class="w"></span>
+
+<span class="nl">quantumGateDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;gate&#39;</span><span class="w"> </span><span class="nv">quantumGateSignature</span><span class="w"> </span><span class="nv">quantumBlock</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumGateSignature</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">classicalArgumentList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="o">)?</span><span class="w"> </span><span class="nv">identifierList</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumBlock</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">quantumStatement</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumLoop</span><span class="w"> </span><span class="o">)*</span><span class="w"> </span><span class="no">RBRACE</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">// loops containing only quantum statements allowed in gates</span><span class="w"></span>
+<span class="nl">quantumLoop</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">loopSignature</span><span class="w"> </span><span class="nv">quantumLoopBlock</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumLoopBlock</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">quantumStatement</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="nv">quantumStatement</span><span class="o">*</span><span class="w"> </span><span class="no">RBRACE</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumStatement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">quantumInstruction</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">timingStatement</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumInstruction</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">quantumGateCall</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumPhase</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumMeasurement</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumBarrier</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumPhase</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;gphase&#39;</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumMeasurement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;measure&#39;</span><span class="w"> </span><span class="nv">indexIdentifierList</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumMeasurementAssignment</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">quantumMeasurement</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">ARROW</span><span class="w"> </span><span class="nv">indexIdentifierList</span><span class="o">)?</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">indexIdentifierList</span><span class="w"> </span><span class="no">EQUALS</span><span class="w"> </span><span class="nv">quantumMeasurement</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumBarrier</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;barrier&#39;</span><span class="w"> </span><span class="nv">indexIdentifierList</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumGateModifier</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="s1">&#39;inv&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;pow&#39;</span><span class="w"> </span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RBRACKET</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ctrl&#39;</span><span class="w"> </span><span class="o">)</span><span class="w"> </span><span class="s1">&#39;@&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumGateCall</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">quantumGateName</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expressionList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="o">)?</span><span class="w"> </span><span class="nv">indexIdentifierList</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">quantumGateName</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;CX&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;U&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;reset&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">Identifier</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumGateModifier</span><span class="w"> </span><span class="nv">quantumGateName</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">/* Classical Instructions */</span><span class="w"></span>
+
+<span class="nl">unaryOperator</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;~&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;!&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">binaryOperator</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;+&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;/&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;&lt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&gt;&gt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;rotl&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;rotr&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&amp;&amp;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;||&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&amp;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;^&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&gt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&gt;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;==&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;!=&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">expressionStatement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
 <span class="nl">expression</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="c">// TODO</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">binaryOperator</span><span class="w"> </span><span class="nv">expression</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">unaryOperator</span><span class="w"> </span><span class="nv">expression</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="nv">incrementor</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">LBRACKET</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RBRACKET</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">membershipTest</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">builtInCall</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">subroutineCall</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">kernelCall</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">MINUS</span><span class="w"> </span><span class="nv">expression</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">expressionTerminator</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">value</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Number</span><span class="w"></span>
+<span class="nl">expressionTerminator</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Constant</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">MINUS</span><span class="o">?</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">Integer</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">RealNumber</span><span class="w"> </span><span class="o">)</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">Identifier</span><span class="w"></span>
 <span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">StringLiteral</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">timingTerminator</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="c">// Lexer variables needs some refactor</span><span class="w"></span>
-<span class="nl">varType</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;qubit&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;qreg&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;bit&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;creg&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;bool&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;const&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;int&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;uint&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;angle&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;fixed&#39;</span><span class="w"></span>
+<span class="nl">expressionList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">COMMA</span><span class="w"> </span><span class="o">)*</span><span class="w"> </span><span class="nv">expression</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">Gate</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;gate&#39;</span><span class="w"></span>
+<span class="nl">builtInCall</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nv">builtInMath</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">castOperator</span><span class="w"> </span><span class="o">)</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expressionList</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"></span>
 <span class="w">    </span><span class="p">;</span><span class="w"></span>
 
-<span class="nl">Assign</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;=&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="nl">builtInMath</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;sin&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;cos&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;tan&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;exp&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ln&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;sqrt&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;popcount&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;lengthof&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
 
+<span class="nl">castOperator</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">classicalType</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">incrementor</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;++&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;--&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">equalsExpression</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">EQUALS</span><span class="w"> </span><span class="nv">expression</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">assignmentOperator</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">EQUALS</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;+=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;-=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;*=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;/=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&amp;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;|=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;~=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;^=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&lt;&lt;=&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;&gt;&gt;=&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">equalsAssignmentList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="nv">equalsExpression</span><span class="w"> </span><span class="no">COMMA</span><span class="o">)*</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="nv">equalsExpression</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">membershipTest</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="s1">&#39;in&#39;</span><span class="w"> </span><span class="nv">setDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">setDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="nv">expressionList</span><span class="w"> </span><span class="no">RBRACE</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">rangeDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">Identifier</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">programBlock</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">statement</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="nv">statement</span><span class="o">*</span><span class="w"> </span><span class="no">RBRACE</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">branchingStatement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;if&#39;</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="nv">programBlock</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="s1">&#39;else&#39;</span><span class="w"> </span><span class="nv">programBlock</span><span class="w"> </span><span class="o">)?</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">loopSignature</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;for&#39;</span><span class="w"> </span><span class="nv">membershipTest</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;while&#39;</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">loopStatement</span><span class="p">:</span><span class="w"> </span><span class="nv">loopSignature</span><span class="w"> </span><span class="nv">programBlock</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">controlDirectiveStatement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">controlDirective</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">controlDirective</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;break&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;continue&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;end&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">kernelDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;kernel&#39;</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">classicalTypeList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="o">)?</span><span class="w"> </span><span class="nv">returnSignature</span><span class="o">?</span><span class="w"></span>
+<span class="w">    </span><span class="nv">classicalType</span><span class="o">?</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">// if have kernel w/ out args, is ambiguous; may get matched as identifier</span><span class="w"></span>
+<span class="nl">kernelCall</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expressionList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">/* Subroutines */</span><span class="w"></span>
+
+<span class="nl">subroutineDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;def&#39;</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">classicalArgumentList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="o">)?</span><span class="w"> </span><span class="nv">quantumArgumentList</span><span class="o">?</span><span class="w"></span>
+<span class="w">    </span><span class="nv">returnSignature</span><span class="o">?</span><span class="w"> </span><span class="nv">subroutineBlock</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">returnStatement</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;return&#39;</span><span class="w"> </span><span class="nv">statement</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">subroutineBlock</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="nv">statement</span><span class="o">*</span><span class="w"> </span><span class="nv">returnStatement</span><span class="o">?</span><span class="w"> </span><span class="no">RBRACE</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">// if have subroutine w/ out args, is ambiguous; may get matched as identifier</span><span class="w"></span>
+<span class="nl">subroutineCall</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expressionList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="o">)?</span><span class="w"> </span><span class="nv">expressionList</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">/* Directives */</span><span class="w"></span>
+
+<span class="nl">pragma</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;#pragma&#39;</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="nv">statement</span><span class="o">*</span><span class="w"> </span><span class="no">RBRACE</span><span class="w">  </span><span class="c">// match any valid openqasm statement</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">/* Circuit Timing */</span><span class="w"></span>
+
+<span class="nl">timingType</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;length&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;stretch&#39;</span><span class="w"> </span><span class="no">Integer</span><span class="o">?</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">timingBox</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;boxas&#39;</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="nv">quantumBlock</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;boxto&#39;</span><span class="w"> </span><span class="no">TimingLiteral</span><span class="w"> </span><span class="nv">quantumBlock</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">timingTerminator</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">timingIdentifier</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;stretchinf&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">timingIdentifier</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="no">TimingLiteral</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="no">MINUS</span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;lengthof&#39;</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">quantumBlock</span><span class="w"> </span><span class="o">)</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">timingInstructionName</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;delay&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;rotary&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">timingInstruction</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">timingInstructionName</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">expressionList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="o">)?</span><span class="w"> </span><span class="nv">designator</span><span class="w"> </span><span class="nv">indexIdentifierList</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">timingStatement</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">timingInstruction</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">timingBox</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">/* Pulse Level Descriptions of Gates and Measurement */</span><span class="w"></span>
+<span class="c">// TODO: Update when pulse grammar is formalized ****</span><span class="w"></span>
+
+<span class="nl">calibration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">calibrationGrammarDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="nv">calibrationDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">calibrationGrammarDeclaration</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;defcalgrammar&#39;</span><span class="w"> </span><span class="nv">calibrationGrammar</span><span class="w"> </span><span class="no">SEMICOLON</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">calibrationDefinition</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;defcal&#39;</span><span class="w"> </span><span class="nv">calibrationGrammar</span><span class="o">?</span><span class="w"> </span><span class="no">Identifier</span><span class="w"></span>
+<span class="w">    </span><span class="o">(</span><span class="w"> </span><span class="no">LPAREN</span><span class="w"> </span><span class="nv">calibrationArgumentList</span><span class="o">?</span><span class="w"> </span><span class="no">RPAREN</span><span class="w"> </span><span class="o">)?</span><span class="w"> </span><span class="nv">identifierList</span><span class="w"></span>
+<span class="w">    </span><span class="nv">returnSignature</span><span class="o">?</span><span class="w"> </span><span class="no">LBRACE</span><span class="w"> </span><span class="o">.*?</span><span class="w"> </span><span class="no">RBRACE</span><span class="w">  </span><span class="c">// for now, match anything inside body</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">calibrationGrammar</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&quot;openpulse&quot;&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">StringLiteral</span><span class="w"> </span><span class="c">// currently: pulse grammar string can be anything</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">calibrationArgumentList</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nv">classicalArgumentList</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">expressionList</span><span class="w"></span>
+<span class="w">    </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">/** Lexer grammar **/</span><span class="w"></span>
+
+<span class="nl">LBRACKET</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;[&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="nl">RBRACKET</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;]&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">LBRACE</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;{&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="nl">RBRACE</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;}&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">LPAREN</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="nl">RPAREN</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">COLON</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;:&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="nl">SEMICOLON</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;;&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">DOT</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="nl">COMMA</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">EQUALS</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="nl">ARROW</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;-&gt;&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">MINUS</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">Constant</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">MINUS</span><span class="o">?</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="s1">&#39;pi&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;π&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;tau&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;𝜏&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;euler&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ℇ&#39;</span><span class="w"> </span><span class="o">)</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">Whitespace</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x"> \t</span><span class="p">]</span><span class="o">+</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">skip</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="nl">Newline</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="o">+</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nv">skip</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="k">fragment</span><span class="w"> </span><span class="nl">Digit</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="nl">Integer</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">Digit</span><span class="o">+</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="k">fragment</span><span class="w"> </span><span class="nl">ValidUnicode</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}</span><span class="p">]</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="c">// valid unicode chars</span><span class="w"></span>
+<span class="k">fragment</span><span class="w"> </span><span class="nl">Letter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">A-Za-z</span><span class="p">]</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="k">fragment</span><span class="w"> </span><span class="nl">FirstIdCharacter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">ValidUnicode</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">Letter</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="k">fragment</span><span class="w"> </span><span class="nl">GeneralIdCharacter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">FirstIdCharacter</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">Integer</span><span class="p">;</span><span class="w"></span>
+
+<span class="nl">Identifier</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">FirstIdCharacter</span><span class="w"> </span><span class="no">GeneralIdCharacter</span><span class="o">*</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="k">fragment</span><span class="w"> </span><span class="nl">SciNotation</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">eE</span><span class="p">]</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="k">fragment</span><span class="w"> </span><span class="nl">PlusMinus</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">-+</span><span class="p">]</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="k">fragment</span><span class="w"> </span><span class="nl">Float</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">Digit</span><span class="o">+</span><span class="w"> </span><span class="no">DOT</span><span class="w"> </span><span class="no">Digit</span><span class="o">*</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="nl">RealNumber</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">Float</span><span class="w"> </span><span class="o">(</span><span class="no">SciNotation</span><span class="w"> </span><span class="no">PlusMinus</span><span class="o">?</span><span class="w"> </span><span class="no">Integer</span><span class="w"> </span><span class="o">)?</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="k">fragment</span><span class="w"> </span><span class="nl">TimeUnit</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;dt&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ns&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;us&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;µs&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;ms&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="c">// represents explicit time value in SI or backend units</span><span class="w"></span>
+<span class="nl">TimingLiteral</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">MINUS</span><span class="o">?</span><span class="w"> </span><span class="o">(</span><span class="no">Integer</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">RealNumber</span><span class="w"> </span><span class="o">)</span><span class="w"> </span><span class="no">TimeUnit</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+
+<span class="c">// allow ``&quot;str&quot;`` and ``&#39;str&#39;``</span><span class="w"></span>
 <span class="nl">StringLiteral</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&quot;&#39;</span><span class="w"> </span><span class="no">Identifier</span><span class="w"> </span><span class="s">&#39;&quot;&#39;</span><span class="w"></span>
-<span class="w">    </span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="w"> </span><span class="o">~</span><span class="p">[</span><span class="x">&quot;\r\t\n]+? &#39;&quot;&#39;</span>
+<span class="x">    | &#39;\&#39;&#39; ~</span><span class="p">[</span><span class="x">&#39;\r\t\n]+? &#39;\&#39;&#39;</span>
+<span class="x">    ;</span>
 
-<span class="nl">OpenBracket</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[&#39;</span><span class="p">;</span><span class="w"></span>
-
-<span class="nl">CloseBracket</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;]&#39;</span><span class="p">;</span><span class="w"></span>
-
-<span class="nl">Colon</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;:&#39;</span><span class="p">;</span><span class="w"></span>
-
-<span class="nl">SemiColon</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;;&#39;</span><span class="p">;</span><span class="w"></span>
-
-<span class="nl">Dot</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;.&#39;</span><span class="p">;</span><span class="w"></span>
-
-<span class="nl">Comma</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#39;,&#39;</span><span class="p">;</span><span class="w"></span>
-
-<span class="nl">Identifier</span><span class="w"></span>
-<span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="o">(</span><span class="s">&#39;a&#39;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s">&#39;z&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;A&#39;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s">&#39;Z&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="s">&#39;a&#39;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s">&#39;z&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;A&#39;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s">&#39;Z&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;0&#39;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s">&#39;9&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">&#39;_&#39;</span><span class="o">)*</span><span class="w"></span>
-<span class="w">    </span><span class="p">;</span><span class="w"></span>
-
-<span class="nl">Number</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="x">0-9</span><span class="p">]</span><span class="o">+</span><span class="p">;</span><span class="w"></span>
+<span class="x">// skip comments</span>
+<span class="x">LineComment : &#39;//&#39; ~</span><span class="p">[</span><span class="x">\r\n</span><span class="p">]</span><span class="x">* -&gt; skip;</span>
+<span class="x">BlockComment : &#39;/*&#39; .*? &#39;*/&#39; -&gt; skip;</span>
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -255,7 +1088,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../language/index.html">Language</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Grammar</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenQasm 3.0 Grammar</a></li>
 </ul>
 
 <div class="relations">
@@ -292,7 +1125,7 @@
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

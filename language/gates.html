@@ -48,15 +48,59 @@ number of one- and two-qubit gates, giving a more compact representation
 than requiring the programmer to express the full <span class="math notranslate nohighlight">\(2^n \times 2^n\)</span>
 matrix. However, a general <span class="math notranslate nohighlight">\(n\)</span>-qubit gate can be defined using an
 exponential number of these gates.</p>
-<p>We now describe this built-in gate set. There is one built-in two-qubit
-gate</p>
+<p>We now describe this built-in gate set.
+All of the single-qubit unitary gates are built-in and
+parameterized as</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\mathrm{CX} := \left(\begin{array}{cccc}
+\[\begin{split}U(\theta,\phi,\lambda) := \left(\begin{array}{cc}
+    \cos(\theta/2) &amp; -e^{i\lambda}\sin(\theta/2) \\
+e^{i\phi}\sin(\theta/2) &amp; e^{i(\phi+\lambda)}\cos(\theta/2) \end{array}\right).\end{split}\]</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">a</span></code> is a quantum
+register, the statement <code class="docutils literal notranslate"><span class="pre">U(θ,</span> <span class="pre">ϕ,</span> <span class="pre">λ)</span> <span class="pre">a;</span></code> means apply <code class="docutils literal notranslate"><span class="pre">U(θ,</span> <span class="pre">ϕ,</span> <span class="pre">λ)</span> <span class="pre">a[j];</span></code> for each index <code class="docutils literal notranslate"><span class="pre">j</span></code> into register <code class="docutils literal notranslate"><span class="pre">a</span></code>. The
+values <span class="math notranslate nohighlight">\(\theta\in [0,2\pi)\)</span>, <span class="math notranslate nohighlight">\(\phi\in [0,2\pi)\)</span>, and
+<span class="math notranslate nohighlight">\(\lambda\in
+[0,2\pi)\)</span> in this base gate are angles whose precision is implementation
+dependent <a class="footnote-reference brackets" href="#id3" id="id2">1</a>. This specifies any element of <span class="math notranslate nohighlight">\(U(2)\)</span> up to a
+global phase. For example <code class="docutils literal notranslate"><span class="pre">U(π/2,</span> <span class="pre">0,</span> <span class="pre">π)</span> <span class="pre">q[0];</span></code>, applies a Hadamard gate to qubit <code class="docutils literal notranslate"><span class="pre">q[0]</span></code>.
+P</p>
+<p>New gates are associated to a unitary transformation by defining them as a sequence of built-in or
+previously defined gates. For example the <code class="docutils literal notranslate"><span class="pre">gate</span></code> block</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span>gate h q {
+   U(π/2, 0, π) q;
+}
+</pre></div>
+</div>
+<p>defines a new gate called <code class="docutils literal notranslate"><span class="pre">h</span></code> and associates it to the unitary matrix of the Hadamard gate. Once we have
+defined <code class="docutils literal notranslate"><span class="pre">h</span></code>, we can use it in later <code class="docutils literal notranslate"><span class="pre">gate</span></code> blocks. The definition does not imply that <code class="docutils literal notranslate"><span class="pre">h</span></code> is
+implemented by an instruction <code class="docutils literal notranslate"><span class="pre">U(π/2,</span> <span class="pre">0,</span> <span class="pre">π)</span></code> on the quantum computer. The implementation is up to
+the user and/or compiler, given information about the instructions supported by a particular target.</p>
+<p>Controled gates can be constructed by adding a control modifier to an existing gate. For example,
+the NOT gate is given by <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">=</span> <span class="pre">U(π,</span> <span class="pre">0,</span> <span class="pre">π)</span></code> and the block</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span>gate CX c, t {
+   ctrl @ U(π, 0, π) c, t;
+}
+
+CX q[1], q[0];
+</pre></div>
+</div>
+<p>defines the gate</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathrm{CX} := I\oplus X = \left(\begin{array}{cccc}
+1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 1 \\
+0 &amp; 0 &amp; 1 &amp; 0 \end{array}\right)\end{split}\]</div>
+<p>that applies a bit-flip <code class="docutils literal notranslate"><span class="pre">X</span></code> to <code class="docutils literal notranslate"><span class="pre">q[0]</span></code> if <code class="docutils literal notranslate"><span class="pre">q[1]</span></code> is one and otherwise applies the identity gate.
+The control modifier is described in more detail later.</p>
+<p>Throughout the document we use a tensor order with higher index qubits on the left. In this tensor order,
+<code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">q[0],</span> <span class="pre">q[1];</span></code> is represented by the matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\left(\begin{array}{cccc}
 1 &amp; 0 &amp; 0 &amp; 0 \\
 0 &amp; 0 &amp; 0 &amp; 1 \\
 0 &amp; 0 &amp; 1 &amp; 0 \\
 0 &amp; 1 &amp; 0 &amp; 0 \end{array}\right)\end{split}\]</div>
-<p>called the controlled-NOT gate. The statement <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a,</span> <span class="pre">b;</span></code> describes a CNOT gate that
+<p>Given the gate definition we have already given, the statement <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a,</span> <span class="pre">b;</span></code> describes a CNOT gate that
 flips the target qubit <code class="docutils literal notranslate"><span class="pre">b</span></code> if and only if the control qubit <code class="docutils literal notranslate"><span class="pre">a</span></code> is one. The
 arguments cannot refer to the same qubit. For convenience, gates automatically broadcast over registers. If <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are quantum registers
 <em>with the same size</em>, the statement <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a,</span> <span class="pre">b;</span></code> means apply <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a[j],</span> <span class="pre">b[j];</span></code> for each index <code class="docutils literal notranslate"><span class="pre">j</span></code> into
@@ -75,8 +119,8 @@ index <code class="docutils literal notranslate"><span class="pre">j</span></cod
 <div class="figure-item" style="max-height: 10rem; width: 50%; display: flex; flex-direction: column;">
 <img alt="../_images/cnotrq.svg" src="../_images/cnotrq.svg" /></div>
 </div>
-<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">The built-in two-qubit entangling gate is the
-controlled-NOT gate. If <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are qubits, the statement <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a,b;</span></code> applies a
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">The two-qubit controlled-NOT gate is contructed from built-in single-qubit gates and the control modifier.
+If <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are qubits, the statement <code class="docutils literal notranslate"><span class="pre">CX</span> <span class="pre">a,b;</span></code> applies a
 controlled-NOT (CNOT) gate that flips the target qubit <code class="docutils literal notranslate"><span class="pre">b</span></code> iff the control qubit <code class="docutils literal notranslate"><span class="pre">a</span></code>
 is one. If <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are quantum registers, the statement applies CNOT gates between
 corresponding qubits of each register. There is a similar meaning when <code class="docutils literal notranslate"><span class="pre">a</span></code> is a qubit and
@@ -94,26 +138,32 @@ parameters <span class="math notranslate nohighlight">\(\theta\)</span>, <span c
 statement applies <code class="docutils literal notranslate"><span class="pre">size(q)</span></code> gates in parallel to the qubits of the
 register.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
-<p>All of the single-qubit unitary gates are also built-in and
-parameterized as</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}U(\theta,\phi,\lambda) := R_z(\phi)R_y(\theta)R_z(\lambda) = \left(\begin{array}{cc}
-    e^{-i(\phi+\lambda)/2}\cos(\theta/2) &amp; -e^{-i(\phi-\lambda)/2}\sin(\theta/2) \\
-e^{i(\phi-\lambda)/2}\sin(\theta/2) &amp; e^{i(\phi+\lambda)/2}\cos(\theta/2) \end{array}\right).\end{split}\]</div>
-<p>Here <span class="math notranslate nohighlight">\(R_y(\theta)=\mathrm{exp}(-i\theta Y/2)\)</span> and
-<span class="math notranslate nohighlight">\(R_z(\phi)=\mathrm{exp}(-i\theta Z/2)\)</span>. When <code class="docutils literal notranslate"><span class="pre">a</span></code> is a quantum
-register, the statement <code class="docutils literal notranslate"><span class="pre">U(θ,</span> <span class="pre">ϕ,</span> <span class="pre">λ)</span> <span class="pre">a;</span></code> means apply <code class="docutils literal notranslate"><span class="pre">U(θ,</span> <span class="pre">ϕ,</span> <span class="pre">λ)</span> <span class="pre">a[j];</span></code> for each index <code class="docutils literal notranslate"><span class="pre">j</span></code> into register <code class="docutils literal notranslate"><span class="pre">a</span></code>. The
-values <span class="math notranslate nohighlight">\(\theta\in [0,2\pi)\)</span>, <span class="math notranslate nohighlight">\(\phi\in [0,2\pi)\)</span>, and
-<span class="math notranslate nohighlight">\(\lambda\in
-[0,2\pi)\)</span> in this base gate are angles whose precision is implementation
-dependent <a class="footnote-reference brackets" href="#id3" id="id2">1</a>. This specifies any element of <span class="math notranslate nohighlight">\(SU(2)\)</span> up to a
-global phase. For example <code class="docutils literal notranslate"><span class="pre">U(π/2,</span> <span class="pre">0,</span> <span class="pre">π)</span> <span class="pre">q[0];</span></code>, applies a Hadamard gate to qubit <code class="docutils literal notranslate"><span class="pre">q[0]</span></code>.</p>
-<p>Finally, a built-in global phase gate allows the inclusion of arbitrary
-global phase on circuits. <code class="docutils literal notranslate"><span class="pre">gphase(γ);</span></code> adds a global phase of <span class="math notranslate nohighlight">\(e^{i\gamma}\)</span> to
-the circuit. e.g.:</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span>gphase(0.5*γ)
+<p>From a physical perspective, the gates <span class="math notranslate nohighlight">\(e^{i\gamma}U\)</span> and <span class="math notranslate nohighlight">\(U\)</span> are equivalent although they differ by a global
+phase <span class="math notranslate nohighlight">\(e^{i\gamma}\)</span>. When we add a control to these gates, however, the global phase becomes a relative phase
+that is applied when the control qubit is one. To capture the programmer’s intent, a built-in global phase gate
+allows the inclusion of arbitrary global phases on circuits. The instruction <code class="docutils literal notranslate"><span class="pre">gphase(γ);</span></code> adds a global phase
+of <span class="math notranslate nohighlight">\(e^{i\gamma}\)</span> to the scope containing the instruction. For example</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span>gate rz(tau) q {
+  gphase(-tau/2);
+  U(0, 0, tau) q;
+}
+ctrl @ rz(π/2) q[1], q[0];
 </pre></div>
 </div>
+<p>constructs the gate</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}R_z(\tau) = \exp(-i\tau Z/2) = \left(\begin{array}{cc}
+e^{-i\tau/2} &amp; 0 \\
+0 &amp; e^{i\tau/2} \end{array}\right) = e^{-i\tau/2}\left(\begin{array}{cc}
+1 &amp; 0 \\
+0 &amp; e^{i\tau} \end{array}\right)\end{split}\]</div>
+<p>and applies the controlled gate</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}I\oplus R_z(\pi/2) = \left(\begin{array}{cccc}
+1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; e^{-i\tau/2} &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; e^{i\tau/2} \end{array}\right).\end{split}\]</div>
 </div>
 <div class="section" id="hierarchically-defined-unitary-gates">
 <span id="sec-macros"></span><h2>Hierarchically defined unitary gates<a class="headerlink" href="#hierarchically-defined-unitary-gates" title="Permalink to this headline">¶</a></h2>
@@ -172,7 +222,8 @@ of the gate definition.</p>
 </div>
 <p>Only built-in gate statements, calls to previously defined gates, and
 timing directives can appear in <code class="docutils literal notranslate"><span class="pre">body</span></code>. For example, it is not valid to
-declare a classical register in a gate body. The statements in the body
+declare a classical register in a gate body. Looping constructs over these quantum
+statements are valid. The statements in the body
 can only refer to the symbols given in the parameter or argument list,
 and these symbols are scoped only to the subroutine body. An empty body
 corresponds to the identity gate. Gates must be declared before use and
@@ -285,7 +336,7 @@ that of the built-in gates.</p>
 <li class="toctree-l2"><a class="reference internal" href="pulses.html">Pulse-level descriptions of gates and measurement</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../grammar/index.html">Grammar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../grammar/index.html">OpenQasm 3.0 Grammar</a></li>
 </ul>
 
 <div class="relations">
@@ -325,7 +376,7 @@ that of the built-in gates.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

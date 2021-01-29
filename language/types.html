@@ -39,7 +39,7 @@
 <h2>Generalities<a class="headerlink" href="#generalities" title="Permalink to this headline">¶</a></h2>
 <p>Variable identifiers must begin with a letter [A-Za-z], an underscore, a
 percent sign, or an element from the Unicode character categories
-Lu/Ll/Lt/Lm/Lo/NI <span class="bibtex" id="id1">[noauthorUnicodeNodate]</span>.
+Lu/Ll/Lt/Lm/Lo/Nl <span class="bibtex" id="id1">[noauthorUnicodeNodate]</span>.
 Continuation characters may contain numbers. Variable identifiers may
 not override a reserved identifier.</p>
 <p>In addition to being assigned values within a program, all of the classical
@@ -250,17 +250,17 @@ float[32] pi_by_2_val = float(pi_by_2)
 <td><p>6.283185…</p></td>
 </tr>
 <tr class="row-even"><td><p>Euler’s number</p></td>
-<td><p>euler_gamma</p></td>
-<td><p><span class="math notranslate nohighlight">\(e\)</span></p></td>
+<td><p>euler</p></td>
+<td><p>ℇ</p></td>
 <td><p>2.7182818284…</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>Note that <cite>e</cite> is a valid identifier. <cite>e/E</cite> are also used in scientifier notation where appropriate.
+Types related to timing
+———————–</p>
 </div>
-</div>
-<div class="section" id="types-related-to-timing">
-<h2>Types related to timing<a class="headerlink" href="#types-related-to-timing" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="length">
 <h3>length<a class="headerlink" href="#length" title="Permalink to this headline">¶</a></h3>
 <p>We introduce a <code class="docutils literal notranslate"><span class="pre">length</span></code> type and several keywords to express lengths of time.
@@ -369,7 +369,6 @@ variables whose values may only be known at run time.</p>
 <li class="toctree-l3"><a class="reference internal" href="#generalities">Generalities</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#quantum-types">Quantum types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#classical-types">Classical types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#types-related-to-timing">Types related to timing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#aliasing">Aliasing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#register-concatenation-and-slicing">Register concatenation and slicing</a></li>
 </ul>
@@ -383,7 +382,7 @@ variables whose values may only be known at run time.</p>
 <li class="toctree-l2"><a class="reference internal" href="pulses.html">Pulse-level descriptions of gates and measurement</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../grammar/index.html">Grammar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../grammar/index.html">OpenQasm 3.0 Grammar</a></li>
 </ul>
 
 <div class="relations">
@@ -423,7 +422,7 @@ variables whose values may only be known at run time.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
