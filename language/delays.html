@@ -168,7 +168,7 @@ these side effects. Also contrary to TeX, we prohibit overlapping gates.</p>
 lengths. These are compile time operations since ultimately all lengths,
 including stretches, will be resolved to constants.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">length</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">300</span><span class="n">ns</span><span class="p">;</span>
-<span class="n">length</span> <span class="n">b</span> <span class="o">=</span> <span class="n">lengthof</span><span class="p">({</span><span class="n">x</span> <span class="o">%</span><span class="mi">0</span><span class="p">});</span>
+<span class="n">length</span> <span class="n">b</span> <span class="o">=</span> <span class="n">lengthof</span><span class="p">({</span><span class="n">x</span> <span class="n">$0</span><span class="p">});</span>
 <span class="n">stretch</span> <span class="n">c</span><span class="p">;</span>
 <span class="c1">// stretchy length with min=300ns</span>
 <span class="n">length</span> <span class="n">d</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">c</span><span class="p">;</span>
@@ -282,24 +282,24 @@ where the *centers* of pulses are equidistant from each other. We
 specify correct lengths for the delays by using backtracking operations
 to properly take into account the finite length of each gate.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">stretch</span> <span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">;</span>
-<span class="n">length</span> <span class="n">start_stretch</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">lengthof</span><span class="p">({</span><span class="n">x</span> <span class="o">%</span><span class="mi">0</span><span class="p">;})</span>
-<span class="n">length</span> <span class="n">middle_stretch</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">lengthof</span><span class="p">({</span><span class="n">x</span> <span class="o">%</span><span class="mi">0</span><span class="p">;})</span> <span class="o">-</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">lengthof</span><span class="p">({</span><span class="n">y</span> <span class="o">%</span><span class="mi">0</span><span class="p">;}</span>
-<span class="n">length</span> <span class="n">end_stretch</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">lengthof</span><span class="p">({</span><span class="n">y</span> <span class="o">%</span><span class="mi">0</span><span class="p">;})</span>
+<span class="n">length</span> <span class="n">start_stretch</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">lengthof</span><span class="p">({</span><span class="n">x</span> <span class="n">$0</span><span class="p">;})</span>
+<span class="n">length</span> <span class="n">middle_stretch</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">lengthof</span><span class="p">({</span><span class="n">x</span> <span class="n">$0</span><span class="p">;})</span> <span class="o">-</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">lengthof</span><span class="p">({</span><span class="n">y</span> <span class="n">$0</span><span class="p">;}</span>
+<span class="n">length</span> <span class="n">end_stretch</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">lengthof</span><span class="p">({</span><span class="n">y</span> <span class="n">$0</span><span class="p">;})</span>
 
-<span class="n">delay</span><span class="p">[</span><span class="n">start_stretch</span><span class="p">]</span> <span class="o">%</span><span class="mi">0</span><span class="p">;</span>
-<span class="n">x</span> <span class="o">%</span><span class="mi">0</span><span class="p">;</span>
-<span class="n">delay</span><span class="p">[</span><span class="n">middle_stretch</span><span class="p">]</span> <span class="o">%</span><span class="mi">0</span><span class="p">;</span>
-<span class="n">y</span> <span class="o">%</span><span class="mi">0</span><span class="p">;</span>
-<span class="n">delay</span><span class="p">[</span><span class="n">middle_stretch</span><span class="p">]</span> <span class="o">%</span><span class="mi">0</span><span class="p">;</span>
-<span class="n">x</span> <span class="o">%</span><span class="mi">0</span><span class="p">;</span>
-<span class="n">delay</span><span class="p">[</span><span class="n">middle_stretch</span><span class="p">]</span> <span class="o">%</span><span class="mi">0</span><span class="p">;</span>
-<span class="n">y</span> <span class="o">%</span><span class="mi">0</span><span class="p">;</span>
-<span class="n">delay</span><span class="p">[</span><span class="n">end_stretch</span><span class="p">]</span> <span class="o">%</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">delay</span><span class="p">[</span><span class="n">start_stretch</span><span class="p">]</span> <span class="n">$0</span><span class="p">;</span>
+<span class="n">x</span> <span class="n">$0</span><span class="p">;</span>
+<span class="n">delay</span><span class="p">[</span><span class="n">middle_stretch</span><span class="p">]</span> <span class="n">$0</span><span class="p">;</span>
+<span class="n">y</span> <span class="n">$0</span><span class="p">;</span>
+<span class="n">delay</span><span class="p">[</span><span class="n">middle_stretch</span><span class="p">]</span> <span class="n">$0</span><span class="p">;</span>
+<span class="n">x</span> <span class="n">$0</span><span class="p">;</span>
+<span class="n">delay</span><span class="p">[</span><span class="n">middle_stretch</span><span class="p">]</span> <span class="n">$0</span><span class="p">;</span>
+<span class="n">y</span> <span class="n">$0</span><span class="p">;</span>
+<span class="n">delay</span><span class="p">[</span><span class="n">end_stretch</span><span class="p">]</span> <span class="n">$0</span><span class="p">;</span>
 
-<span class="n">cx</span> <span class="o">%</span><span class="mi">2</span><span class="p">,</span> <span class="o">%</span><span class="mi">3</span><span class="p">;</span>
-<span class="n">delay</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">%</span><span class="mi">1</span><span class="p">;</span>
-<span class="n">cx</span> <span class="o">%</span><span class="mi">1</span><span class="p">,</span> <span class="o">%</span><span class="mi">2</span><span class="p">;</span>
-<span class="n">u</span> <span class="o">%</span><span class="mi">3</span><span class="p">;</span>
+<span class="n">cx</span> <span class="n">$2</span><span class="p">,</span> <span class="n">$3</span><span class="p">;</span>
+<span class="n">delay</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="n">$1</span><span class="p">;</span>
+<span class="n">cx</span> <span class="n">$1</span><span class="p">,</span> <span class="n">$2</span><span class="p">;</span>
+<span class="n">u</span> <span class="n">$3</span><span class="p">;</span>
 </pre></div>
 </div>
 </div>
@@ -443,7 +443,7 @@ barrier, or cancelled by a compiler.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

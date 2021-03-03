@@ -12,7 +12,6 @@
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Comments" href="comments.html" />
@@ -36,12 +35,15 @@
   <div class="section" id="language">
 <span id="sec-spec"></span><h1>Language<a class="headerlink" href="#language" title="Permalink to this headline">¶</a></h1>
 <p>Hereafter, OpenQASM refers to the extended language we now describe. The
-human-readable form of OpenQASM is a simple C-like textual language.
-Statements are separated by semicolons. Whitespace is ignored. The
-language is case sensitive. Appendix <a class="reference external" href="#app:summary">[app:summary]</a>
-summarizes the language statements,
-Appendix <a class="reference external" href="#app:grammar">[app:grammar]</a> specifies the grammar, and
-Appendix <a class="reference external" href="#app:semantics">[app:semantics]</a> gives formal semantics.</p>
+human-readable form of OpenQASM is a simple C-like textual language. By
+that we mean that statements are separated by semicolons and whitespace
+is ignored. In other respects, OpenQASM diverges quite significantly from
+C, reflecting its dual nature as sometimes an assembly language and
+sometimes as a hardware description language. The language is case
+sensitive. Appendix <a class="reference external" href="#app:summary">[app:summary]</a> summarizes the
+language statements, Appendix <a class="reference external" href="#app:grammar">[app:grammar]</a> specifies
+the grammar, and Appendix <a class="reference external" href="#app:semantics">[app:semantics]</a> gives formal
+semantics.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="comments.html">Comments</a></li>
@@ -180,7 +182,7 @@ Appendix <a class="reference external" href="#app:semantics">[app:semantics]</a
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
