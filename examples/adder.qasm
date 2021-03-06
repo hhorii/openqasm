@@ -19,8 +19,8 @@ gate unmaj a, b, c {
 
 qubit cin[1], a[4], b[4], cout[1];
 bit ans[5];
-uint[4] a_in = 1;  // a = 0001
-uint[4] b_in = 15; // b = 1111
+bit a_in[4] = "0001";  // a = 0001
+bit b_in[4] = "1111";  // b = 1111
 // initialize qubits
 reset cin;
 reset a;
@@ -29,8 +29,8 @@ reset cout;
 
 // set input states
 for i in [0: 3] {
-  if(bool(ain[i])) x a[i];
-  if(bool(bin[i])) x b[i];
+  if(a_in[i]) x a[i];
+  if(b_in[i]) x b[i];
 }
 // add a to b, storing result in b
 majority cin[0], b[0], a[0];
