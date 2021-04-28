@@ -39,9 +39,10 @@
 <h2>Generalities<a class="headerlink" href="#generalities" title="Permalink to this headline">¶</a></h2>
 <p>Variable identifiers must begin with a letter [A-Za-z], an underscore, a
 percent sign, or an element from the Unicode character categories
-Lu/Ll/Lt/Lm/Lo/Nl <span class="bibtex" id="id1">[noauthorUnicodeNodate]</span>.
-Continuation characters may contain numbers. Variable identifiers may
-not override a reserved identifier.</p>
+Lu/Ll/Lt/Lm/Lo/Nl <span class="bibtex" id="id1">[noauthorUnicodeNodate]</span>. The set of permissible
+continuation characters consists of all members of the aforementioned character
+sets with the addition of decimal numerals [0-9]. Variable identifiers may not
+override a reserved identifier.</p>
 <p>In addition to being assigned values within a program, all of the classical
 types can be initialized on declaration. Multiple comma-separated declarations
 can occur after the typename with optional assignment on declaration for each.
@@ -66,10 +67,8 @@ arrays of qubits that cannot be dynamically resized. The statement <code class="
 declares a reference to a quantum bit. The statement <code class="docutils literal notranslate"><span class="pre">qreg</span> <span class="pre">name[size];</span></code> or <code class="docutils literal notranslate"><span class="pre">qubit</span> <span class="pre">name[size];</span></code> declares a
 quantum register with the given name identifier. The keyword <code class="docutils literal notranslate"><span class="pre">qreg</span></code> is included
 for backwards compatibility and will be removed in the future. Sizes
-must always be constant positive integers. The label <code class="docutils literal notranslate"><span class="pre">name[j]</span></code> refers to a qubit
-of this register, where
-<span class="math notranslate nohighlight">\(j\in \{0,1,\dots,\mathrm{size}(\mathrm{name})-1\}\)</span> is an integer.
-Qubits are initially in an undefined state. A quantum <code class="docutils literal notranslate"><span class="pre">reset</span></code> operation is one
+must always be constant positive integers.</p>
+<p>Qubits are initially in an undefined state. A quantum <code class="docutils literal notranslate"><span class="pre">reset</span></code> operation is one
 way to initialize qubit states.</p>
 <p>All qubits are global variables.
 Qubits cannot be declared within gates or subroutines. This simplifies OpenQASM
@@ -423,7 +422,7 @@ variables whose values may only be known at run time.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

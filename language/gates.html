@@ -266,14 +266,14 @@ those with their inverse. The base case is given by replacing <code class="docut
 }
 </pre></div>
 </div>
-<p>The modifier <code class="docutils literal notranslate"><span class="pre">pow[k]</span> <span class="pre">&#64;</span></code> replaces its gate argument <span class="math notranslate nohighlight">\(U\)</span> by its <span class="math notranslate nohighlight">\(k\)</span>th
+<p>The modifier <code class="docutils literal notranslate"><span class="pre">pow(k)</span> <span class="pre">&#64;</span></code> replaces its gate argument <span class="math notranslate nohighlight">\(U\)</span> by its <span class="math notranslate nohighlight">\(k\)</span>th
 power <span class="math notranslate nohighlight">\(U^k\)</span> for some positive integer <span class="math notranslate nohighlight">\(k\)</span> (not necessarily
 constant). Such a gate can be trivially defined as <span class="math notranslate nohighlight">\(k\)</span> repetitions
 of the original gate, although more efficient implementations may be
 possible.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span>// define x as sqrt(x)
 gate x q1 {
-    pow[2] @ sx q1;
+    pow(2) @ sx q1;
 }
 </pre></div>
 </div>
@@ -376,7 +376,7 @@ that of the built-in gates.</p>
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

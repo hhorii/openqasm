@@ -47,16 +47,19 @@
 </div>
 <div class="section" id="version-string">
 <h1>Version string<a class="headerlink" href="#version-string" title="Permalink to this headline">¶</a></h1>
-<p>The first (non-comment) line of an OpenQASM program may optionally be <code class="docutils literal notranslate"><span class="pre">OPENQASM</span> <span class="pre">M.m;</span></code>
-indicating a major version M and minor version m. Version 3.0 is
-described in this document. Multiple occurrences of the version keyword
-are not permitted. The minor version number and decimal point are
-optional. If they are not present, minor version number is assumed to be zero.</p>
+<p>The first non-comment line of an OpenQASM program may optionally be
+<code class="docutils literal notranslate"><span class="pre">OPENQASM</span></code> <em>M.m</em> <code class="docutils literal notranslate"><span class="pre">;</span></code> indicating a major version <em>M</em> and minor version <em>m</em>.</p>
+<p>This document describes Version 3.0.</p>
+<p>The minor version number, expressed as a decimal point after the major version
+number followed by a number, is optional. If not present, the minor version
+number is assumed to be zero.</p>
+<p>Multiple occurrences of the version string (outside of comments) are not
+permitted, nor may it appear elsewhere than the first non-comment line.</p>
 </div>
 <div class="section" id="included-files">
 <h1>Included files<a class="headerlink" href="#included-files" title="Permalink to this headline">¶</a></h1>
-<p>The statement <code class="docutils literal notranslate"><span class="pre">include</span> <span class="pre">&quot;filename&quot;;</span></code> continues parsing <code class="docutils literal notranslate"><span class="pre">filename</span></code> as if the contents of the file were
-inserted at the location of the <code class="docutils literal notranslate"><span class="pre">include</span></code> statement.</p>
+<p>The statement <code class="docutils literal notranslate"><span class="pre">include</span> <span class="pre">&quot;filename&quot;;</span></code> continues parsing <code class="docutils literal notranslate"><span class="pre">filename</span></code> as if the
+contents of the file were inserted at the location of the <code class="docutils literal notranslate"><span class="pre">include</span></code> statement.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// First non-comment is a version string</span>
 <span class="n">OPENQASM</span> <span class="mf">3.0</span><span class="p">;</span>
 
@@ -140,7 +143,7 @@ inserted at the location of the <code class="docutils literal notranslate"><span
       &copy;2017-2020, Andrew W. Cross, Lev S. Bishop, John A. Smolin, Jay M. Gambetta.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
